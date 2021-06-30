@@ -12,8 +12,7 @@ import GameRoom from "./Components/GameRoom/GameRoom";
  *      1. 向 Server 申請計入 client 名字，方便在『強制關閉』的情況下，系統仍可自動清楚 DB 中的 Player 紀錄
  *      2. GameRoom 可向 Server 申請 / 取消 製作傳送點 (TimeInterval)
  * */
-const url = new URL(window.location.href);
-const ws = new WebSocket({uri: url.href.replace("http", "ws"),});
+const ws = new WebSocket(window.location.href.replace("http","ws"));
     )
 // const ws = new WebSocket('ws://localhost:4000')
 
