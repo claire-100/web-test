@@ -15,12 +15,12 @@ import App from './App';
 /* -------------------------------------------------------------------------- */
 // Create an http link:
 const httpLink = new HttpLink({
-    uri: 'http://localhost:5000/graphql',
+    uri: 'http://web-f.herokuapp.com/graphql',
 });
 
 // Create a WebSocket link:
 const wsLink = new WebSocketLink({
-    uri: `ws://localhost:5000/graphql`,
+    uri: `ws://web-f.herokuapp.com/graphql`,
     options: {reconnect: true},
 });
 
