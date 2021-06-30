@@ -10,6 +10,8 @@ import { getMainDefinition } from 'apollo-utilities';
 import "antd/dist/antd.css";
 import App from './App';
 
+const url = new URL("/graphql", window.location.href);
+
 /* -------------------------------------------------------------------------- */
 /*                                   GraphQL                                  */
 /* -------------------------------------------------------------------------- */
