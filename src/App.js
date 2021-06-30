@@ -13,7 +13,6 @@ import GameRoom from "./Components/GameRoom/GameRoom";
  *      2. GameRoom 可向 Server 申請 / 取消 製作傳送點 (TimeInterval)
  * */
 const ws = new WebSocket(window.location.href.replace("http","ws"));
-    )
 // const ws = new WebSocket('ws://localhost:4000')
 
 const LOCALSTORAGE_KEY = "saved-me";
