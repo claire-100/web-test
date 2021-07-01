@@ -78,7 +78,7 @@ export default function GameRoom({me, roomID, setRoomID, sendPayload}) {
         variables:{roomID: roomID},
     })
     // 監聽到新的房間設定時更新
-    // console.log('Gameroom',roomName)
+    console.log('Gameroom',roomName)
     useEffect(() => {
         if (data) {
             setCols(data.gameRoomInfo.cols);
@@ -95,7 +95,6 @@ export default function GameRoom({me, roomID, setRoomID, sendPayload}) {
     // 監聽房間設定是否改變
     useEffect(() => {
         try {
-            // console.log('監聽房間狀況')
             subscribeToMore({
                 document: SUBSCRIPTION_GAME_ROOM_INFO,
                 variables: {roomID: roomID},
@@ -297,7 +296,7 @@ export default function GameRoom({me, roomID, setRoomID, sendPayload}) {
     // 房間設定改變
     function handleChangeSetting(changeItem, value) {
         let variables = {roomID: roomID};
-        // console.log('www',variables)
+        console.log('www',variables)
         switch (changeItem) {
             case "roomName": {
                 variables["roomName"] = value;

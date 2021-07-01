@@ -204,7 +204,7 @@ const Mutation = {
         // 找出要加入的 room、加入他
         const room = db.gameRooms.find(room => room.id === roomID);
         room.maze = maze
-        // console.log('isStart',room.isStart)
+        console.log('isStart',room.isStart)
 
         // 廣播給所有在房間的玩家
         pubsub.publish(`gameRoomID ${roomID} maze`, {

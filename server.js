@@ -1,6 +1,5 @@
 import express from "express";
 import { ApolloServer, PubSub } from "apollo-server-express";
-// import { GraphQLServer, PubSub } from 'graphql-yoga';
 import { importSchema } from "graphql-import";
 import bodyParser from "body-parser";
 import cors from "cors";
@@ -11,27 +10,27 @@ import path from "path";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import resolvers from "./backend/resolvers/index.js";
-import db from "./db.js";
+import db from "./backend/db.js";
 import Query from "./backend/resolvers/Query.js";
 import Mutation from "./backend/resolvers/Mutation.js";
 import Subscription from "./backend/resolvers/Subscription.js";
 
 import {checkLogOut} from "./backend/utils/onCloseFunction.js";
 import {generateTeleport} from "./backend/utils/generateTeleport.js";
-import { SubscriptionServer } from 'subscriptions-transport-ws';
-import { execute, subscribe } from 'graphql';
-// import { schema } from './backend/schema.graphql';
+
+// import mongo from "./backend/mongo.js";
+// import apiRoute from "./backend/route/api.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 const typeDefs = importSchema("./backend/schema.graphql");
 const pubsub = new PubSub();
 const app = express();
 
-app.use(cors());
+// app.use(cors());
 // app.use("/api", apiRoute);
-app.use('/graphql', bodyParser.json());
+app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "build")));
 // app.get("/*", function (req, res) {
 //   res.sendFile(path.join(__dirname, "build", "index.html"));
@@ -40,28 +39,18 @@ app.use(express.static(path.join(__dirname, "build")));
 const server = new ApolloServer({
   typeDefs,
   resolvers: resolvers,
-  // subscriptions: "/subscriptions",
   context: {
     db,
     pubsub,
   },
 });
 
-
 server.applyMiddleware({ app });
 const httpServer = http.createServer(app);
-server.installSubscriptionHandlers(httpServer);
 
-const port2 = 3000
-const webserver = express()
-    .listen(port2, () => console.log(`Listening on ${port2}`))
+const wss = new WebSocket.Server({ noServer: true });
 
-
-// const wss = new WebSocket.Server({ noServer: true });
-
-// const wss = new WebSocket.Server({server: httpServer2});
-
-const wss = new WebSocket.Server({server: webserver});
+// const wss = new WebSocket.Server({server: httpServer});
 
 
 const intervalObj = {}  // 用來記錄 timeInterval 物件，之後才可刪除
@@ -117,39 +106,17 @@ wss.on('connection', function connection(client) {
     });
 });
 
+httpServer.on('upgrade', function (request, socket, head) {
+  wss.handleUpgrade(request, socket, head, function (ws) {
+     wss.emit('connection', ws, request);
+  })
+})
+// httpServer.listen(4000, () => {
+//     console.log('WebScoket Server listening at http://localhost:4000');
 // });
-// //========== subscriptionServer ============//
-// //========== subscriptionServer ============//
-// //========== subscriptionServer ============//
-
-// const subscriptionServer = SubscriptionServer.create(
-//   {
-//     typeDefs,
-//     execute,
-//     subscribe,
-//   },
-//   {
-//     server: wss,
-//     path: '/subscriptions',
-//   },
-// );
-
-// //========== no server 使用 ============//
-// //========== no server 使用 ============//
-// //========== no server 使用 ============//
-
-// httpServer2.on('upgrade', function (request, socket, head) {
-//   wss.handleUpgrade(request, socket, head, function (ws) {
-//      wss.emit('connection', ws, request);
-//   })
-// })
 
 
 httpServer.listen(port, () => {
   console.log(`🚀 Server Ready at ${port}! 🚀`);
   console.log(`Graphql Port at ${port}${server.subscriptionsPath}`);
 });
-
-// server.start({ port: process.env.PORT2 | 4000 }, () => {
-//     console.log(`GraphQl Server listening at http://localhost:${process.env.PORT2 | 4000}`);
-// })

@@ -13,35 +13,28 @@ import App from './App';
 /* -------------------------------------------------------------------------- */
 /*                                   GraphQL                                  */
 /* -------------------------------------------------------------------------- */
-// Create an http link:
+// // Create an http link:
 // const httpLink = new HttpLink({
-//     uri: 'http://localhost:8080/',
+//     uri: 'http://localhost:5000/graphql',
 // });
-
+const url = new URL("/graphql", window.location.href);
 // // Create a WebSocket link:
 // const wsLink = new WebSocketLink({
-//     uri: `ws://localhost:8080/`,
+//     uri: `ws://localhost:5000/graphql`,
 //     options: {reconnect: true},
 // });
 
-//================//=================//
-//           PORT 
-//  
-//================//=================//
-
-const url = new URL("/graphql", window.location.href);
-
 const httpLink = new HttpLink({
+//     uri: 'http://web-f.herokuapp.com/graphql',
      uri: url.href,
 });
 
 // Create a WebSocket link:
-const url_w = new URL("/graphql", window.location.href);
 const wsLink = new WebSocketLink({
-    uri: url_w.href.replace("http", "ws"),
+//     uri: `ws://web-f.herokuapp.com/graphql`,
+    uri: url.href.replace("http", "ws"),
     options: {reconnect: true},
 });
-
 
 // using the ability to split links, you can send data to each link
 // depending on what kind of operation is being sent
@@ -58,11 +51,9 @@ const link = split(
     httpLink,
 );
 
-
 const client = new ApolloClient({
     link,
     cache: new InMemoryCache().restore({}),
-    networkInterface: client,
 });
 
 
