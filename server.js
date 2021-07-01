@@ -52,12 +52,12 @@ server.applyMiddleware({ app });
 const httpServer = http.createServer(app);
 server.installSubscriptionHandlers(httpServer);
 
-const port2 = 4000
-const webserver = express()
-    .listen(port2, () => console.log(`Listening on ${port}`))
+// const port2 = 4000
+// const webserver = express()
+//     .listen(port2, () => console.log(`Listening on ${port}`))
 
 
-// const wss = new WebSocket.Server({ noServer: true });
+const wss = new WebSocket.Server({ noServer: true });
 
 // const wss = new WebSocket.Server({server: httpServer2});
 
