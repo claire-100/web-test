@@ -16,7 +16,7 @@ const url = new URL("/", window.location.href);
 // const url = new URL(window.location.href);
 // const ws = new WebSocket({uri: url.href.replace("http", "ws"),});
 const ws = new WebSocket(window.location.href.replace("http","ws"));
-const ws = new WebSocket(window.location.href.replace(5000,3000));
+// const ws = new WebSocket(window.location.href.replace(5000,3000));
 
 const LOCALSTORAGE_KEY = "saved-me";
 
