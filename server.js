@@ -47,6 +47,7 @@ const server = new ApolloServer({
 
 server.applyMiddleware({ app });
 const httpServer = http.createServer(app);
+server.installSubscriptionHandlers(httpServer);
 
 const wss = new WebSocket.Server({ noServer: true });
 
@@ -106,11 +107,11 @@ wss.on('connection', function connection(client) {
     });
 });
 
-httpServer.on('upgrade', function (request, socket, head) {
-  wss.handleUpgrade(request, socket, head, function (ws) {
-     wss.emit('connection', ws, request);
-  })
-})
+// httpServer.on('upgrade', function (request, socket, head) {
+//   wss.handleUpgrade(request, socket, head, function (ws) {
+//      wss.emit('connection', ws, request);
+//   })
+// })
 // httpServer.listen(4000, () => {
 //     console.log('WebScoket Server listening at http://localhost:4000');
 // });
