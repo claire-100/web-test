@@ -18,12 +18,12 @@ import Subscription from "./backend/resolvers/Subscription.js";
 
 import {checkLogOut} from "./backend/utils/onCloseFunction.js";
 import {generateTeleport} from "./backend/utils/generateTeleport.js";
-
-// import mongo from "./backend/mongo.js";
-// import apiRoute from "./backend/route/api.js";
+import { SubscriptionServer } from 'subscriptions-transport-ws';
+import { execute, subscribe } from 'graphql';
+// import { schema } from './backend/schema.graphql';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const port = process.env.PORT || 5000;
+const port = 5000;
 
 const typeDefs = importSchema("./backend/schema.graphql");
 const pubsub = new PubSub();
@@ -31,7 +31,7 @@ const app = express();
 
 app.use(cors());
 // app.use("/api", apiRoute);
-app.use(bodyParser.json());
+app.use('/graphql', bodyParser.json());
 app.use(express.static(path.join(__dirname, "build")));
 // app.get("/*", function (req, res) {
 //   res.sendFile(path.join(__dirname, "build", "index.html"));
@@ -40,20 +40,28 @@ app.use(express.static(path.join(__dirname, "build")));
 const server = new ApolloServer({
   typeDefs,
   resolvers: resolvers,
-  // subscriptions: "/subscription",
+  // subscriptions: "/subscriptions",
   context: {
     db,
     pubsub,
   },
 });
 
+
 server.applyMiddleware({ app });
 const httpServer = http.createServer(app);
 server.installSubscriptionHandlers(httpServer);
 
-const wss = new WebSocket.Server({ noServer: true });
+const port2 = 4000
+const webserver = express()
+    .listen(port2, () => console.log(`Listening on ${port}`))
 
-// const wss = new WebSocket.Server({server: httpServer});
+
+// const wss = new WebSocket.Server({ noServer: true });
+
+// const wss = new WebSocket.Server({server: httpServer2});
+
+const wss = new WebSocket.Server({server: webserver});
 
 
 const intervalObj = {}  // 用來記錄 timeInterval 物件，之後才可刪除
@@ -109,15 +117,32 @@ wss.on('connection', function connection(client) {
     });
 });
 
-// httpServer.on('upgrade', function (request, socket, head) {
+// });
+// //========== subscriptionServer ============//
+// //========== subscriptionServer ============//
+// //========== subscriptionServer ============//
+
+// const subscriptionServer = SubscriptionServer.create(
+//   {
+//     typeDefs,
+//     execute,
+//     subscribe,
+//   },
+//   {
+//     server: wss,
+//     path: '/subscriptions',
+//   },
+// );
+
+// //========== no server 使用 ============//
+// //========== no server 使用 ============//
+// //========== no server 使用 ============//
+
+// httpServer2.on('upgrade', function (request, socket, head) {
 //   wss.handleUpgrade(request, socket, head, function (ws) {
 //      wss.emit('connection', ws, request);
 //   })
 // })
-
-// httpServer.listen(5000, () => {
-//     console.log('WebScoket Server listening at http://localhost:5000');
-// });
 
 
 httpServer.listen(port, () => {

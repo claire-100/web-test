@@ -15,12 +15,12 @@ import App from './App';
 /* -------------------------------------------------------------------------- */
 // Create an http link:
 // const httpLink = new HttpLink({
-//     uri: 'http://localhost:4000',
+//     uri: 'http://localhost:8080/',
 // });
 
 // // Create a WebSocket link:
 // const wsLink = new WebSocketLink({
-//     uri: `ws://localhost:4000`,
+//     uri: `ws://localhost:8080/`,
 //     options: {reconnect: true},
 // });
 
@@ -42,6 +42,7 @@ const wsLink = new WebSocketLink({
     options: {reconnect: true},
 });
 
+
 // using the ability to split links, you can send data to each link
 // depending on what kind of operation is being sent
 const link = split(
@@ -57,9 +58,11 @@ const link = split(
     httpLink,
 );
 
+
 const client = new ApolloClient({
     link,
     cache: new InMemoryCache().restore({}),
+    networkInterface: client,
 });
 
 
