@@ -3,7 +3,7 @@ import Cell from "./Cell";
 import { Spin } from 'antd';
 
 function Canvas({cols, rows, width, maze, teleportPosition, players, me, isFinished}) {
-
+    console.log('Canvas')
     // 將 players 拆成 me 跟 other
     // 目的：渲染時讓自己圖層在上面
     let otherInfo = []

@@ -30,7 +30,7 @@ const CreateRoomModal = ({me, setRoomID, visible, setModalVisible}) => {
     // 點選 Create Button 時呼叫
     async function handleCreateGameRoom() {
         const roomName = await form.validateFields().then(res => res["Room Name"])  // 取得 Form 上的 roomName
-
+        // console.log('CreateRoomModal',roomName)
         // [GraphQL] 新增房間、紀錄 Server 生成的 RoomID
         const roomID = await createRoom({
             variables: {

@@ -1,5 +1,6 @@
 import express from "express";
 import { ApolloServer, PubSub } from "apollo-server-express";
+// import { GraphQLServer, PubSub } from 'graphql-yoga';
 import { importSchema } from "graphql-import";
 import bodyParser from "body-parser";
 import cors from "cors";
@@ -10,7 +11,7 @@ import path from "path";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import resolvers from "./backend/resolvers/index.js";
-import db from "./backend/db.js";
+import db from "./db.js";
 import Query from "./backend/resolvers/Query.js";
 import Mutation from "./backend/resolvers/Mutation.js";
 import Subscription from "./backend/resolvers/Subscription.js";
@@ -28,7 +29,7 @@ const typeDefs = importSchema("./backend/schema.graphql");
 const pubsub = new PubSub();
 const app = express();
 
-// app.use(cors());
+app.use(cors());
 // app.use("/api", apiRoute);
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "build")));
@@ -39,6 +40,7 @@ app.use(express.static(path.join(__dirname, "build")));
 const server = new ApolloServer({
   typeDefs,
   resolvers: resolvers,
+  // subscriptions: "/subscription",
   context: {
     db,
     pubsub,
@@ -112,8 +114,9 @@ wss.on('connection', function connection(client) {
 //      wss.emit('connection', ws, request);
 //   })
 // })
-// httpServer.listen(4000, () => {
-//     console.log('WebScoket Server listening at http://localhost:4000');
+
+// httpServer.listen(5000, () => {
+//     console.log('WebScoket Server listening at http://localhost:5000');
 // });
 
 
@@ -121,3 +124,7 @@ httpServer.listen(port, () => {
   console.log(`🚀 Server Ready at ${port}! 🚀`);
   console.log(`Graphql Port at ${port}${server.subscriptionsPath}`);
 });
+
+// server.start({ port: process.env.PORT2 | 4000 }, () => {
+//     console.log(`GraphQl Server listening at http://localhost:${process.env.PORT2 | 4000}`);
+// })
